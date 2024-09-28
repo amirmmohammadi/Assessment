@@ -1,5 +1,3 @@
-import datetime
-
 from celery import shared_task
 from django.db.models import Avg
 from django.utils import timezone
@@ -16,6 +14,7 @@ def update_all_content_average_scores():
 
     contents = Content.valid_objects.filter(score_count__gte=min_score_count)
 
+    # HINT : We can use pandas for more efficiency.
     for content in contents:
         content.detect_spam_scores()
 
@@ -44,4 +43,3 @@ def update_all_content_average_scores():
 
     if updates:
         Content.objects.bulk_update(updates, ['score_average', 'score_count', 'calculated_to'])
-

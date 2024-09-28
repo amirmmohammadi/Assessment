@@ -1,4 +1,3 @@
-# Create your views here.
 from django.db.models import Subquery, OuterRef
 from rest_framework import generics
 from rest_framework import status
