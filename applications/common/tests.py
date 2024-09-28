@@ -1,7 +1,7 @@
 from faker import Faker
 from rest_framework.test import APITestCase, APIClient
 
-from user.models import User
+from applications.user.models import User
 
 fake = Faker()
 

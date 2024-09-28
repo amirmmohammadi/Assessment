@@ -2,8 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel
-from user.choices import GenderChoice
+from applications.common.models import BaseModel
+from applications.user.choices import GenderChoice
 
 
 # Create your models here.

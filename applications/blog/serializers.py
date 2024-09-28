@@ -17,4 +17,4 @@ class ContentSerializer(serializers.ModelSerializer):
 class ContentScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentScore
-        exclude = ('is_spam', 'owner')
+        fields = ('content', 'score')

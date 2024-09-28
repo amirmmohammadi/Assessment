@@ -7,17 +7,14 @@ from django.utils import timezone
 from .models import ContentScore, Content
 
 
-@shared_task(name='update_all_content_average_scores', run_every='hour')
+@shared_task(name='update_all_content_average_scores')
 def update_all_content_average_scores():
-    """To find votes registered as spam. We divided the averages recorded for one hour into 6 parts.
 
-If the average scores change by more than 20% in this 10-minute period, we consider all the votes in that hour as spam.
-
-We do not consider the number of votes and the increase in the number of votes as spam because these votes may be real. We only consider sudden changes in the average as spam"""
     updates = []
+    min_score_count = 100
     now = timezone.now()
 
-    contents = Content.valid_objects.all()
+    contents = Content.valid_objects.filter(score_count__gte=min_score_count)
 
     for content in contents:
         content.detect_spam_scores()

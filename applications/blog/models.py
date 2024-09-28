@@ -7,7 +7,7 @@ from django.db.models import Avg
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from common.models import BaseModel, TimeStampBaseModel
+from applications.common.models import BaseModel, TimeBaseModel
 
 
 # Create your models here.
@@ -59,14 +59,14 @@ class Content(BaseModel):
                 ContentScore.objects.filter(created_at__gte=start_time, created_at__lt=end_time).update(is_spam=True)
 
 
-class ContentScore(TimeStampBaseModel):
+class ContentScore(TimeBaseModel):
     owner = models.ForeignKey(to='user.User', on_delete=models.CASCADE, verbose_name=_('User'))
     content = models.ForeignKey(Content, on_delete=models.CASCADE, verbose_name=_('Content'))
     score = models.PositiveIntegerField(verbose_name=_('Score'), validators=[MinValueValidator(1), MaxValueValidator(5)])
     is_spam = models.BooleanField(verbose_name=_('Is Spam'), default=False)
 
     class Meta:
-        ordering = ['created_at',]
+        ordering = ('created_at',)
         verbose_name = _('Content Score')
         verbose_name_plural = _('Content Scores')
         unique_together = (('content', 'owner'),)

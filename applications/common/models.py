@@ -2,13 +2,13 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from common.managers import BaseManagerModel
+from .managers import BaseManagerModel
 
 
 # Create your models here.
 
 
-class TimeStampBaseModel(models.Model):
+class TimeBaseModel(models.Model):
     updated_at = models.DateTimeField(verbose_name=_('Updated at'), auto_now=True)
     created_at = models.DateTimeField(verbose_name=_('Created at'), auto_now_add=True, editable=False)
 
@@ -16,7 +16,7 @@ class TimeStampBaseModel(models.Model):
         abstract = True
 
 
-class BaseModel(TimeStampBaseModel):
+class BaseModel(TimeBaseModel):
     active = models.BooleanField(verbose_name=_('Active'), default=True)
     is_deleted = models.BooleanField(verbose_name=_('Is deleted'), default=False)
     deleted_at = models.DateTimeField(verbose_name=_('Deleted at'), null=True, blank=True)

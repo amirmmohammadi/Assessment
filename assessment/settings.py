@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
 
-    'common.apps.CommonConfig',
-    'user.apps.UserConfig',
-    'blog.apps.BlogConfig',
+    'applications.common.apps.CommonConfig',
+    'applications.user.apps.UserConfig',
+    'applications.blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [

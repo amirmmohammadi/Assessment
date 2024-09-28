@@ -38,6 +38,7 @@ class SubmitScoreAPIView(generics.GenericAPIView):
         content = serializer.validated_data['content']
         score = serializer.validated_data['score']
 
+        # HINT: we can use .get() instead of update_or_create with less query but less readability.
         content_score, created = ContentScore.objects.update_or_create(owner=request.user, content=content,
                                                                        defaults={"score": score})
 

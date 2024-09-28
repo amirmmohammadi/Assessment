@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 
-from common.tests import BaseAPITestCase, fake
+from applications.common.tests import BaseAPITestCase, fake
 from .models import Content, ContentScore
 
 
@@ -27,6 +27,9 @@ class ListContentAPIViewTestCase(BaseAPITestCase):
             self.assertIn('user_score', content)
             self.assertIsNotNone(content['user_score'])
 
+            self.assertIn('title', content)
+            self.assertIn('body', content)
+
 
 class SubmitScoreAPIViewTestCase(BaseAPITestCase):
     def setUp(self):
@@ -45,12 +48,13 @@ class SubmitScoreAPIViewTestCase(BaseAPITestCase):
         self.assertEqual(response.data['message'], "Score created successfully.")
 
     def test_submit_score_update(self):
-        score = 2
-        ContentScore.objects.create(content=self.content, owner=self.user, score=score)
+        old_score = 2
+        new_score = 3
+        ContentScore.objects.create(content=self.content, owner=self.user, score=old_score)
 
         data = {
             'content': self.content.id,
-            'score': score
+            'score': new_score
         }
 
         response = self.client.post(reverse('submit-score'), data, format='json')
