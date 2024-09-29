@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg
@@ -34,28 +35,27 @@ class Content(BaseModel):
     def detect_spam_scores(self):
         now = timezone.now()
 
-        time_from_payload = 1  # hour
-        time_from_slice = 10  # minutes
-
-        time_from = now - datetime.timedelta(hours=time_from_payload)
+        time_from = now - datetime.timedelta(hours=settings.TIME_FROM_PAYLOAD)
         last_content_scores = ContentScore.objects.filter(created_at__gte=time_from, content=self)
+
+        if last_content_scores.count() < settings.MIN_SCORE_COUNT:
+            pass
 
         dict_me = {}
 
-        for i in range(0, 60 * time_from_payload, time_from_slice):
+        for i in range(0, 60 * settings.TIME_FROM_PAYLOAD, settings.TIME_FROM_SLICE):
             time_slice_start = time_from + datetime.timedelta(minutes=i)
-            time_slice_end = time_slice_start + datetime.timedelta(minutes=time_from_slice)
+            time_slice_end = time_slice_start + datetime.timedelta(minutes=settings.TIME_FROM_SLICE)
 
             time_slice = last_content_scores.filter(created_at__gte=time_slice_start, created_at__lt=time_slice_end)
             average = time_slice.aggregate(Avg('score'))['score__avg'] or 0.0
 
             dict_me[average] = (time_slice_start, time_slice_end)
 
-        spam_rate_threshold = 20 / 100
         average_overall = sum(dict_me.keys()) / len(dict_me) if dict_me else 0
 
         for average, (start_time, end_time) in dict_me.items():
-            if average > 0 and (average / average_overall) > spam_rate_threshold:
+            if average > 0 and (average / average_overall) > settings.SPAM_RATE_THRESHOLD:
                 ContentScore.objects.filter(created_at__gte=start_time, created_at__lt=end_time).update(is_spam=True)
 
 

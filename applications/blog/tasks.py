@@ -9,12 +9,11 @@ from .models import ContentScore, Content
 def update_all_content_average_scores():
 
     updates = []
-    min_score_count = 100
     now = timezone.now()
 
-    contents = Content.valid_objects.filter(score_count__gte=min_score_count)
+    contents = Content.valid_objects.all()
 
-    # HINT : We can use pandas for more efficiency.
+    # HINT : We can use pandas (buffer frame) for more efficiency.
     for content in contents:
         content.detect_spam_scores()
 

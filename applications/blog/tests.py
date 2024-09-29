@@ -63,7 +63,7 @@ class SubmitScoreAPIViewTestCase(BaseAPITestCase):
         self.assertEqual(response.data['message'], "Score updated successfully.")
 
         content_score = ContentScore.objects.get(content=self.content, owner=self.user)
-        self.assertEqual(content_score.score, score)
+        self.assertEqual(content_score.score, new_score)
 
     def test_submit_score_update_validation_error(self):
         score = 9
